@@ -1,0 +1,312 @@
+# Case Study #1: Danny's Diner
+<img src='https://8weeksqlchallenge.com/images/case-study-designs/1.png' alt="Danny's Diner Image" width="500" height="520">
+
+***
+
+## Table of Contents
+1. [Bussiness Task](#bussiness-task)
+2. [Entity Relationship Diagram](#entity-relationship-diagram)
+3. [Analysis Questions](#analysis-questions)
+4. [Bonus Questions](#bonus-questions)
+Please note that all the information regarding the case study has been sourced from the following link: here.
+
+***
+
+## Bussiness Task
+Danny wants to use the data to answer a few simple questions about his customers, especially about their visiting patterns, how much money they’ve spent and also which menu items are their favourite. Having this deeper connection with his customers will help him deliver a better and more personalised experience for his loyal customers.
+
+***
+
+## Entity Relationship Diagram
+![alt text](image.png)
+
+
+***
+
+## Analysis Questions
+
+**1. What is the total amount each customer spent at the restaurant?**
+
+````sql
+SELECT s.customer_id, SUM(m.price) total_sales
+FROM dannys_diner.sales s
+INNER JOIN dannys_diner.menu m
+ON s.product_id = m.product_id
+GROUP BY s.customer_id
+ORDER BY total_sales DESC;
+````
+
+### Steps
+
+### Answer
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+| B           | 74          |
+| C           | 36          |
+
+- Customer A spent $76.
+- Customer B spent $74.
+- Customer C spent $36.
+
+***
+
+2. How many days has each customer visited the restaurant?
+
+````sql
+SELECT s.customer_id, COUNT(DISTINCT order_date) total_visits
+FROM dannys_diner.sales s
+GROUP BY s.customer_id
+ORDER BY total_visits DESC;
+````
+
+### Steps
+
+### Answer
+| customer_id | total_sales |
+| ----------- | ----------- |
+| B           | 6           |
+| A           | 4           |
+| C           | 2           |
+
+- Customer A has visited 4 times.
+- Customer B has visited 6 times.
+- Customer C has visited 2 times.
+
+***
+
+**3. What was the first item from the menu purchased by each customer?**
+
+````sql
+WITH ordered_sales AS (
+    SELECT 
+        s.customer_id,
+        s.order_date, 
+        m.product_name,
+        DENSE_RANK() OVER (
+            PARTITION BY s.customer_id --, s.order_date 
+            ORDER BY s.order_date
+        ) AS o_rank
+    FROM dannys_diner.sales s
+  	LEFT JOIN dannys_diner.menu m
+  	ON s.product_id = m.product_id
+)
+SELECT customer_id,product_name
+FROM ordered_sales
+WHERE o_rank = 1
+GROUP BY customer_id, product_name
+ORDER BY customer_id;
+````
+
+### Steps
+
+### Answer
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | curry       |
+| A           | sushi       |
+| B           | curry       |
+| C           | ramen       |
+
+- Customer A first ordered curry and suchi simultinously.
+- Customer B first ordered curry
+- Customer C first ordered ramen.
+
+***
+
+**4. What is the most purchased item on the menu and how many times was it purchased by all customers?**
+
+````sql
+SELECT  
+	m.product_name, 
+	COUNT(*) most_purchased
+FROM dannys_diner.sales s
+LEFT JOIN dannys_diner.menu m
+	ON s.product_id = m.product_id
+GROUP BY m.product_name
+ORDER BY most_purchased DESC
+LIMIT 1;
+````
+
+### Steps
+
+### Answer
+| product_name | most_purchased |
+| ------------ | -------------- |
+| ramen        | 8              |
+
+- Ramen is the most purchased item (8 purchases)
+
+***
+
+**5. Which item was the most popular for each customer?**
+
+````sql
+WITH count_per_customer AS (
+    SELECT 
+        s.customer_id, 
+        m.product_name, 
+        COUNT(m.product_id) AS total_count,
+  		DENSE_RANK() OVER (
+          PARTITION BY s.customer_id
+                          ORDER BY COUNT(s.customer_id) DESC) rank
+  	FROM dannys_diner.sales s
+    LEFT JOIN dannys_diner.menu m
+        ON s.product_id = m.product_id
+    GROUP BY s.customer_id, m.product_name
+)
+SELECT customer_id,
+	   product_name,
+	   total_count
+FROM count_per_customer
+WHERE rank = 1;
+````
+
+### Steps
+
+
+### Answer
+| customer_id | product_name | total_count |
+| ----------- | ------------ | ----------- |
+| A           | ramen        | 3           |
+| B           | ramen        | 2           |
+| B           | curry        | 2           |
+| B           | sushi        | 2           |
+| C           | ramen        | 3           |
+
+***
+
+**6. Which item was purchased first by the customer after they became a member?**
+
+````sql
+WITH first_item_after_member AS (
+  SELECT m.customer_id, 
+         me.product_name,
+         DENSE_RANK() OVER (PARTITION BY m.customer_id 
+                            ORDER BY s.order_date ASC) rank
+  FROM dannys_diner.members m
+  RIGHT JOIN dannys_diner.sales s
+     ON m.customer_id = s.customer_id
+  LEFT JOIN dannys_diner.menu me
+  	 ON s.product_id = me.product_id
+  WHERE s.order_date >= m.join_date
+  ORDER BY m.customer_id, s.order_date)
+  SELECT customer_id, 
+         product_name 
+  FROM first_item_after_member
+  WHERE rank = 1;
+````
+
+### Steps
+
+
+### Answer
+| customer_id | product_name |
+| ----------- | ------------ |
+| A           | curry        |
+| B           | sushi        |
+
+***
+
+**7. Which item was purchased just before the customer became a member?**
+
+````sql
+WITH last_item_before_member AS (
+  SELECT m.customer_id, 
+  		 s.order_date,
+         me.product_name,
+         row_number() OVER (PARTITION BY m.customer_id 
+                            ORDER BY s.order_date DESC) rank
+  FROM dannys_diner.members m
+  INNER JOIN dannys_diner.sales s
+     ON m.customer_id = s.customer_id
+  LEFT JOIN dannys_diner.menu me
+  	 ON s.product_id = me.product_id
+  WHERE s.order_date < m.join_date
+  ORDER BY m.customer_id, s.order_date)
+  SELECT customer_id,
+         product_name 
+  FROM last_item_before_member
+  WHERE rank = 1;
+````
+
+### Steps
+
+
+### Answer
+| customer_id | product_name |
+| ----------- | ------------ |
+| A           | sushi        |
+| B           | sushi        |
+
+***
+
+**8. What is the total items and amount spent for each member before they became a member?**
+
+````sql
+SELECT m.customer_id, 
+       COUNT(s.product_id) product_count,
+       SUM(me.price) total_amount_spend
+FROM dannys_diner.members m
+LEFT JOIN dannys_diner.sales s
+ON s.customer_id = m.customer_id 
+INNER JOIN dannys_diner.menu me
+ON s.product_id = me.product_id
+WHERE s.order_date < m.join_date
+GROUP BY m.customer_id
+ORDER BY m.customer_id;
+````
+
+### Steps
+
+
+### Answer
+| customer_id | product_count | total_amount_spent |
+| ----------- | ------------- | ------------------ |
+| A           | 2             | 25                 |
+| B           | 3             | 40                 |
+
+***
+
+**9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
+
+````sql
+SELECT s.customer_id,
+	  SUM(CASE
+           WHEN me.product_name = 'sushi' THEN me.price * 2
+           ELSE me.price
+       END) * 10 total_points
+FROM dannys_diner.sales s
+LEFT JOIN dannys_diner.menu me
+ON s.product_id = me.product_id
+GROUP BY s.customer_id
+ORDER BY s.customer_id;
+````
+
+### Steps
+
+
+### Answer
+| customer_id | total_points |
+| ----------- | ------------ |
+| A           | 860          |
+| B           | 940          |
+| C           | 360          |
+
+***
+
+**10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
+
+````sql
+
+````
+
+### Steps
+
+
+### Answer
+
+
+***
+
+## Bonus Question
