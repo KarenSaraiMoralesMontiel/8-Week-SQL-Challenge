@@ -197,6 +197,10 @@ WHERE rank = 1;
 | B           | sushi        | 2           |
 | C           | ramen        | 3           |
 
+- Customer A has bought ramen the most (3 times).
+- Customer B has bought ramen, curry and sushi the most equally (2 times).
+- Customer C has bought ramen the most (3 times).
+
 ***
 
 **6. Which item was purchased first by the customer after they became a member?**
@@ -231,6 +235,10 @@ WITH first_item_after_member AS (
 | ----------- | ------------ |
 | A           | curry        |
 | B           | sushi        |
+
+- Customer A ordered curry first as a member.
+- Customer B ordered sushi first as a member.
+- Customer C is not a member so they don't appear.
 
 ***
 
@@ -274,6 +282,10 @@ We use **ROW_NUMBER** instead of **RANK** or **DENSE_RANK** because we are only 
 | A           | sushi        |
 | B           | sushi        |
 
+- Customer A bought sushi at last before becoming a member.
+- Customer B bought sushi at last before becoming a member.
+- Customer C is not a member so they don't appear.
+
 ***
 
 **8. What is the total items and amount spent for each member before they became a member?**
@@ -304,6 +316,10 @@ ORDER BY m.customer_id;
 | A           | 2             | 25                 |
 | B           | 3             | 40                 |
 
+- Customer A bought 2 products and spent 25 before becoming a member.
+- Customer B bought 3 products and spent 40 before becoming a member.
+- Customer C is not a member.
+
 ***
 
 **9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?**
@@ -333,6 +349,10 @@ ORDER BY s.customer_id;
 | A           | 860          |
 | B           | 940          |
 | C           | 360          |
+
+- Customer A has accumulated 860 points out of all their purchases.
+- Customer B has accumulated 940 points out of all their purchases.
+- Customer C has accumulated 360 points out of all their purchases.
 
 ***
 
@@ -373,7 +393,9 @@ SELECT s.customer_id,
  ORDER BY s.customer_id, s.order_date;
 ````
 
-**OUTPUT**
+## Steps
+
+## Answer
 
 customer_id	|        order_date        |  product_name  | price | member |
  ---------- | ------------------------ | -------------- | ----- | ------ |
@@ -393,7 +415,6 @@ C	        | 2021-01-01T00:00:00.000Z | ramen          | 12	| N      |
 C	        | 2021-01-01T00:00:00.000Z | ramen          | 12	| N      |
 C	        | 2021-01-07T00:00:00.000Z | ramen          | 12	| N      |
 
-***
 
 **Rank All The Things**
 
@@ -402,3 +423,7 @@ Danny also requires further information about the ranking of customer products, 
 ````sql
 
 ````
+
+## Steps
+
+## Answer
