@@ -7,7 +7,7 @@ It showcases my ability to tackle bussiness questions and solve case studies wit
 Thanks for [Data with Danny](https://www.linkedin.com/company/datawithdanny/) for providing these interesting and engaging case studies!
 
 ## 📖 Table of Contents
-- [👨🏻‍🍳 Case Study #1: Danny's Diner](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main/Case%20Study%20%231%20-%20Danny's%20Diner) (In progress!!)
+- [👨🏻‍🍳 Case Study #1: Danny's Diner](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main/Case%20Study%20%231%20-%20Danny's%20Diner#-case-study-1-dannys-diner) (In progress!!)
 - 🍕 Case Study #2: Pizza Runner
 - 🥑 Case Study #3: Foodie-Fi
 - 💰 Case Study #4: Data Bank
