@@ -8,6 +8,8 @@
 2. [Entity Relationship Diagram](#entity-relationship-diagram)
 3. [Analysis Questions](#analysis-questions)
 4. [Bonus Questions](#bonus-questions)
+
+
 Please note that all the information regarding the case study has been sourced from the following link: [here](https://8weeksqlchallenge.com/case-study-1/).
 
 ***
@@ -25,7 +27,7 @@ Danny wants to use the data to answer a few simple questions about his customers
 
 ## Analysis Questions
 
-Please feel free to check the solutions in the [Db Finder](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138). The solutions provided here are run on PostgresSQL v13.
+Please feel free to check the solutions in the [Db Finder](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138). The solutions provided here are run on PostgresSQL v13. With that being said, let's delve into it!
 
 **1. What is the total amount each customer spent at the restaurant?**
 
@@ -39,6 +41,9 @@ ORDER BY total_sales DESC;
 ````
 
 ### Steps
+- Use **JOIN** to merge `dannys_diner.sales` with alias s and `dannys_diner.menu` with alias s tables as `sales.customer_id` and `menu.price` are from both tables.
+- Use the aggregate function **SUM** to calculate the total sales contributed by each customer.
+- Group the aggregated results by `sales.customer_id`. 
 
 ### Answer
 | customer_id | total_sales |
@@ -63,6 +68,9 @@ ORDER BY total_visits DESC;
 ````
 
 ### Steps
+- Use the aggregate function **COUNT** and the function **DISTINCT** to count the different dates each costumer has visited the diner.
+- Group the aggregated results by `sales.customer_id`. 
+- Order the aggregated results in **DESC** by total_visits to have the clientes by how many times they have visited the store. 
 
 ### Answer
 | customer_id | total_sales |
@@ -101,6 +109,9 @@ ORDER BY customer_id;
 ````
 
 ### Steps
+- Create a Common Table Expression (CTE) named `ordered_sales`. Within the CTE, create a new column named `o_rank` using **DENSE_RANK** over partitions by `dannys_diner.customer_id` and use a **LEFT JOIN** with `dannys_diner.menu` to get the `product_name`.
+- Use **GROUP BY** with `customer_id` and `product_name`.
+- Use **WHERE** to only display the results with `o_rank` as 1. 
 
 ### Answer
 | customer_id | total_sales |
