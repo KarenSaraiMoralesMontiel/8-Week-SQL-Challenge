@@ -352,7 +352,7 @@ ORDER BY s.customer_id;
 
 ## Bonus Questions
 
-**JOIN ALL THINGS**
+**Join All Things**
 
 It should show the customer_id, order_date, product_name and display a 'Y' if the order was made by a a member else 'N'.
 
@@ -369,28 +369,29 @@ SELECT s.customer_id,
   LEFT JOIN dannys_diner.members m
   ON s.customer_id = m.customer_id
  LEFT JOIN dannys_diner.menu menu
- ON s.product_id = menu.product_id;
+ ON s.product_id = menu.product_id
+ ORDER BY s.customer_id, s.order_date;
 ````
 
 **OUTPUT**
 
- customer_id |        order_date        | product_name | price |  member |
- ----------- | ------------------------ | ------------ | ----- | ------- |
-A 	         | 2021-01-07T00:00:00.000Z | curry        | 15    | Y       |
-A 	         | 2021-01-11T00:00:00.000Z | ramen        | 12    | Y       |
-A  	         | 2021-01-11T00:00:00.000Z | ramen        | 12    | Y       |
-A  	         | 2021-01-10T00:00:00.000Z | ramen        | 12    | Y       |
-A  	         | 2021-01-01T00:00:00.000Z | sushi        | 10    | N       |
-A  	         | 2021-01-01T00:00:00.000Z | curry        | 15    | N       |
-B  	         | 2021-01-04T00:00:00.000Z | sushi        | 10    | N       |
-B  	         | 2021-01-11T00:00:00.000Z | sushi        | 10    | Y       |
-B  	         | 2021-01-01T00:00:00.000Z | curry        | 15    | N       |
-B  	         | 2021-01-02T00:00:00.000Z | curry        | 15    | N       |
-B  	         | 2021-01-16T00:00:00.000Z | ramen        | 12    | Y       |
-B  	         | 2021-02-01T00:00:00.000Z | ramen        | 12    | Y       |
-C  	         | 2021-01-01T00:00:00.000Z | ramen        | 12    | N       |
-C  	         | 2021-01-01T00:00:00.000Z | ramen        | 12    | N       |
-C  	         | 2021-01-07T00:00:00.000Z | ramen        | 12    | N       |
+customer_id	|        order_date        |  product_name  | price | member |
+ ---------- | ------------------------ | -------------- | ----- | ------ |
+A	        | 2021-01-01T00:00:00.000Z | sushi          | 10    | N      |
+A	        | 2021-01-01T00:00:00.000Z | curry          | 15    | N      |
+A	        | 2021-01-07T00:00:00.000Z | curry          | 15    | Y      |
+A	        | 2021-01-10T00:00:00.000Z | ramen          | 12    | Y      |
+A	        | 2021-01-11T00:00:00.000Z | ramen          | 12    | Y      |
+A 	        | 2021-01-11T00:00:00.000Z | ramen          | 12	| Y      |
+B	        | 2021-01-01T00:00:00.000Z | curry          | 15	| N      |
+B	        | 2021-01-02T00:00:00.000Z | curry          | 15	| N      |
+B	        | 2021-01-04T00:00:00.000Z | sushi          | 10	| N      |
+B	        | 2021-01-11T00:00:00.000Z | sushi          | 10	| Y      |
+B	        | 2021-01-16T00:00:00.000Z | ramen          | 12	| Y      |
+B	        | 2021-02-01T00:00:00.000Z | ramen          | 12	| Y      |
+C	        | 2021-01-01T00:00:00.000Z | ramen          | 12	| N      |
+C	        | 2021-01-01T00:00:00.000Z | ramen          | 12	| N      |
+C	        | 2021-01-07T00:00:00.000Z | ramen          | 12	| N      |
 
 ***
 
