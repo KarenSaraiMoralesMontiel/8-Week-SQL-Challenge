@@ -1,9 +1,9 @@
-# Case Study #1: Danny's Diner
+# 👨🏻‍🍳 Case Study #1: Danny's Diner
 <img src='https://8weeksqlchallenge.com/images/case-study-designs/1.png' alt="Danny's Diner Image" width="500" height="520">
 
 ***
 
-## Table of Contents
+## 📖 Table of Contents
 1. [Bussiness Task](#bussiness-task)
 2. [Entity Relationship Diagram](#entity-relationship-diagram)
 3. [Analysis Questions](#analysis-questions)
@@ -147,7 +147,7 @@ LIMIT 1;
 ### Steps
 - Use **LEFT JOIN** with `dannys_diner.sales` and `dannys_diner.menu` to get `menu.product_name`.
 - Use the aggregate function **COUNT** on `menu.product_name`.
-- Order the agregated results by the **COUNT** and only display the first element with **LIMIT** .
+- Order the agregated results by the **COUNT** and only display the first element with **LIMIT** 1 .
 
 ### Answer
 | product_name | most_purchased |
@@ -184,7 +184,7 @@ WHERE rank = 1;
 ### Steps
 - Create a Common Table Expresion (CTE) named `count_per_customer`. Create a new column called `rank` with **DENSE_RANK** over **PARTITION BY** on `sales.customer_id` with **ORDER BY** by **COUNT** the customer_id **DESC** agrouping `sales.customer_id` and `menu.product_name`
     -  Use **LEFT JOIN** on `dannys_diner.sales` and `dannys_diner.menu` within `count_per_customer` CTE.
-- Select `customer_id` , `product_name` and `total_count` only with `rank` is 1.
+- Select `customer_id` , `product_name` and `total_count` only with `rank` is equal to 1.
 
 ### Answer
 | customer_id | product_name | total_count |
@@ -219,7 +219,10 @@ WITH first_item_after_member AS (
 ````
 
 ### Steps
-
+- Create a Common Table Expression (CTE) named `first_time_after_member` joining the tables `dannes_diner.sales`, `dannes_diner.menu` and `dannes_diner.members`.    
+    - Using **DENSE_RANK** over **PARTITION BY** `members.customer_id` and ordering it by `sales.order_date`. 
+    - Use **WHERE** `sales.order_date` is less or equal to `members.join_date`
+- Select `customer_id` and `product_name` from the CTE created with `rank` is equal to 1.
 
 ### Answer
 | customer_id | product_name |
@@ -236,7 +239,7 @@ WITH last_item_before_member AS (
   SELECT m.customer_id, 
   		 s.order_date,
          me.product_name,
-         row_number() OVER (PARTITION BY m.customer_id 
+         ROW_NUMBER() OVER (PARTITION BY m.customer_id 
                             ORDER BY s.order_date DESC) rank
   FROM dannys_diner.members m
   INNER JOIN dannys_diner.sales s
