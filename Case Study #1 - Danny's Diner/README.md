@@ -115,6 +115,7 @@ ORDER BY customer_id;
 - Use **WHERE** to only display the results with `o_rank` as 1. 
 
 **NOTE**
+
 If needed decomment order_date to get the first items bough on each visit.
 
 ### Answer
@@ -262,6 +263,7 @@ WITH last_item_before_member AS (
 - Select the `customer_id`, `product_name` where `rank` is equal to 1.
 
 **NOTE**
+
 We use **ROW_NUMBER** instead of **RANK** or **DENSE_RANK** because we are only interested in the very last record. We don't care about items above the last one. 
 
 **RANK** AND **DENSE_RANK** rank over a determined order given, allowing multiple to rows to chare rank whereas **ROW_NUMBER** assigns a different number regardless.
@@ -320,7 +322,10 @@ ORDER BY s.customer_id;
 ````
 
 ### Steps
-
+- Join the tables `dannys_diner.menu` and `dannys_diner.sales` to get all the necessary data.
+- Use  **CASE**  if `menu.product_name` is equal to 'sushi' double the price. 
+- Create a new column called `total_points` using the **SUM** function to all the `menu.price` and multiply by 10.
+- Agroup by `sales.customer_id` and order by the same field to display the result.
 
 ### Answer
 | customer_id | total_points |
