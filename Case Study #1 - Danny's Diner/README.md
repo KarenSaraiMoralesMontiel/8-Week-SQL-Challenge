@@ -359,14 +359,34 @@ ORDER BY s.customer_id;
 **10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?**
 
 ````sql
-
+SELECT s.customer_id,
+       SUM(CASE
+             WHEN me.product_name = 'sushi' OR 
+                  (m.customer_id IS NOT NULL AND s.order_date <= m.join_date + INTERVAL '7 DAYS')
+             THEN me.price * 2
+             ELSE me.price
+           END) * 10 AS total_points
+FROM dannys_diner.sales s
+LEFT JOIN dannys_diner.menu me
+  ON s.product_id = me.product_id
+LEFT JOIN dannys_diner.members m
+  ON s.customer_id = m.customer_id
+GROUP BY s.customer_id
+ORDER BY s.customer_id;
 ````
 
 ### Steps
-
+ - Join the tables `dannys_diner.menu` , `dannys_diner.sales` and `dannys_diner.members` to get all the necessary data.
+- Use  **CASE**  if `menu.product_name` is equal to 'sushi'  or the customer is a member and the order has been made within a week then double the price. 
+- Create a new column called `total_points` using the **SUM** function to all the `menu.price` and multiply by 10.
+- Agroup by `sales.customer_id` and order by the same field to display the result.
 
 ### Answer
-
+| customer_id | total_points |
+| ----------- | ------------ |
+| A           | 1520         |
+| B           | 1360         |
+| C           | 360          |
 
 ***
 
@@ -394,6 +414,10 @@ SELECT s.customer_id,
 ````
 
 ### Steps
+- Join the tables `dannys_diner.sales`, `dannys_diner.members` and `dannys_diner.menu` to get the necessary data.
+- Create a field named `member`. 
+    - If the order was made by a member (if a customer made an order before becoming a member then it doesn't apply) then have 'Y'.
+    - Else 'N'.
 
 ### Answer
 
@@ -448,6 +472,8 @@ FROM rank_all_things;
 ````
 
 ### Steps
+- Create a Common Table Expression (CTE) named `rank_all_things`.
+    - Create a column names `ranking` using **CASE** to return NULL if an order was made by a nonmember and if it was then assign a rank using **RANK** over **PARTITION BY** customer_id and member ordering them by order_date.
 
 ### Answer
 
