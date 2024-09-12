@@ -393,9 +393,9 @@ SELECT s.customer_id,
  ORDER BY s.customer_id, s.order_date;
 ````
 
-## Steps
+### Steps
 
-## Answer
+### Answer
 
 customer_id	|        order_date        |  product_name  | price | member |
  ---------- | ------------------------ | -------------- | ----- | ------ |
@@ -424,6 +424,6 @@ Danny also requires further information about the ranking of customer products, 
 
 ````
 
-## Steps
+### Steps
 
-## Answer
+### Answer
