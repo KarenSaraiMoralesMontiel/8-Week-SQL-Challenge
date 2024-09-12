@@ -8,7 +8,7 @@
 2. [Entity Relationship Diagram](#entity-relationship-diagram)
 3. [Analysis Questions](#analysis-questions)
 4. [Bonus Questions](#bonus-questions)
-Please note that all the information regarding the case study has been sourced from the following link: here.
+Please note that all the information regarding the case study has been sourced from the following link: [here](https://8weeksqlchallenge.com/case-study-1/).
 
 ***
 
@@ -24,6 +24,8 @@ Danny wants to use the data to answer a few simple questions about his customers
 ***
 
 ## Analysis Questions
+
+Please feel free to check the solutions in the [Db Finder](https://www.db-fiddle.com/f/2rM8RAnq7h5LLDTzZiRWcd/138). The solutions provided here are run on PostgresSQL v13.
 
 **1. What is the total amount each customer spent at the restaurant?**
 
