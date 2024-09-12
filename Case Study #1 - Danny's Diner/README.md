@@ -1,4 +1,5 @@
 # 👨🏻‍🍳 Case Study #1: Danny's Diner
+
 <img src='https://8weeksqlchallenge.com/images/case-study-designs/1.png' alt="Danny's Diner Image" width="500" height="520">
 
 ***
@@ -255,7 +256,15 @@ WITH last_item_before_member AS (
 ````
 
 ### Steps
+- Create a Common Table Expression (CTE) named `last_item_before_member` joining three tables `dannys_diner.sales`, `dannys_diner.menu` and `dannys_diner.sales`.
+        - Create a new column called `rank` **ROW_NUMBER** over **PARTITION BY** `members.customer_id` ordering them by `sales.order_date`.
+        - Use **WHERE** to only get the orders before the customers became members.
+- Select the `customer_id`, `product_name` where `rank` is equal to 1.
 
+**NOTE**
+We use **ROW_NUMBER** instead of **RANK** or **DENSE_RANK** because we are only interested in the very last record. We don't care about items above the last one. 
+
+**RANK** AND **DENSE_RANK** rank over a determined order given, allowing multiple to rows to chare rank whereas **ROW_NUMBER** assigns a different number regardless.
 
 ### Answer
 | customer_id | product_name |
@@ -282,7 +291,10 @@ ORDER BY m.customer_id;
 ````
 
 ### Steps
-
+- Join the three tables `dannys_diner.sales`, `dannys_diner.menu` and `dannys_diner.members` to get all the data necessary and filter with **WHERE** all the `sales.order_sales` before the members joined. 
+- Use the **COUNT** function to get all the products bought.
+- USE **SUM** function to sum the prices of each order bought.
+- Use **GROUP BY** `members.customer_id` and **ORDER BY** `members.customer_id` to display the results.
 
 ### Answer
 | customer_id | product_count | total_amount_spent |
