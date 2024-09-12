@@ -29,12 +29,12 @@ Danny was sold on the idea, but he knew that pizza alone was not going to help h
 
 ## 🧼 Data Cleaning
 
-🛠 Customer Orders
+### 🛠 Customer Orders
 
 
 ***
 
-🛠 Runner Orders
+### 🛠 Runner Orders
 
 
 ***

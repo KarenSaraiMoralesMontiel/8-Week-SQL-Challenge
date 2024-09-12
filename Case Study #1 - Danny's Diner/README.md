@@ -116,7 +116,7 @@ ORDER BY customer_id;
 
 **NOTE**
 
-If needed decomment order_date to get the first items bough on each visit.
+If needed decomment order_date to get the first items bought on each visit.
 
 ### Answer
 | customer_id | total_sales |
