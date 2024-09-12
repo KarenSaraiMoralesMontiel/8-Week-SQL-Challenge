@@ -113,6 +113,9 @@ ORDER BY customer_id;
 - Use **GROUP BY** with `customer_id` and `product_name`.
 - Use **WHERE** to only display the results with `o_rank` as 1. 
 
+**NOTE**
+If needed decomment order_date to get the first items bough on each visit.
+
 ### Answer
 | customer_id | total_sales |
 | ----------- | ----------- |
@@ -142,13 +145,16 @@ LIMIT 1;
 ````
 
 ### Steps
+- Use **LEFT JOIN** with `dannys_diner.sales` and `dannys_diner.menu` to get `menu.product_name`.
+- Use the aggregate function **COUNT** on `menu.product_name`.
+- Order the agregated results by the **COUNT** and only display the first element with **LIMIT** .
 
 ### Answer
 | product_name | most_purchased |
 | ------------ | -------------- |
 | ramen        | 8              |
 
-- Ramen is the most purchased item (8 purchases)
+- Ramen is the most purchased item (8 purchases).
 
 ***
 
@@ -176,7 +182,9 @@ WHERE rank = 1;
 ````
 
 ### Steps
-
+- Create a Common Table Expresion (CTE) named `count_per_customer`. Create a new column called `rank` with **DENSE_RANK** over **PARTITION BY** on `sales.customer_id` with **ORDER BY** by **COUNT** the customer_id **DESC** agrouping `sales.customer_id` and `menu.product_name`
+    -  Use **LEFT JOIN** on `dannys_diner.sales` and `dannys_diner.menu` within `count_per_customer` CTE.
+- Select `customer_id` , `product_name` and `total_count` only with `rank` is 1.
 
 ### Answer
 | customer_id | product_name | total_count |
