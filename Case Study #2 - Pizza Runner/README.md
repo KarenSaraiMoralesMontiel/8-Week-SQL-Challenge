@@ -183,7 +183,8 @@ Now we are all set to use this temporary tables to answer the solutions from thi
 ### 1. How many pizzas were ordered?
 
 ````sql
-SELECT COUNT(order_id) total_orders
+SELECT 
+    COUNT(order_id) total_orders
 FROM temp_customer_orders;
 ````
 
@@ -200,7 +201,7 @@ FROM temp_customer_orders;
 
 ````sql
 SELECT 
-COUNT(DISTINCT order_id) AS unique_order_count
+    COUNT(DISTINCT order_id) AS unique_order_count
 FROM temp_customer_orders;
 ````
 
@@ -219,7 +220,7 @@ FROM temp_customer_orders;
 ````sql
 SELECT runner_id, 
 	   COUNT(order_id) sucessful_deliveries
-FROM --runner_orders
+FROM temp_runner_orders
 WHERE cancellation IS NULL
 GROUP BY runner_id;
 
@@ -227,6 +228,7 @@ GROUP BY runner_id;
 
 **Answer:**
 |runner_id | sucessful_deliveries |
+| ---------| -------------------- |
 | 1        |  4                   |
 | 2        |  3                   |
 | 3        |  1                   |
@@ -243,9 +245,9 @@ GROUP BY runner_id;
 SELECT pizza_names.pizza_name, 
        COUNT(t_customer_orders.order_id) AS order_count
 FROM temp_customer_orders AS t_customer_orders
-LEFT JOIN pizza_runner.pizza_names AS pizza_names
+INNER JOIN pizza_runner.pizza_names AS pizza_names
     ON t_customer_orders.pizza_id = pizza_names.pizza_id
-LEFT JOIN temp_runner_orders AS t_runner_orders
+INNER JOIN temp_runner_orders AS t_runner_orders
     ON t_customer_orders.order_id = t_runner_orders.order_id
 WHERE t_runner_orders.cancellation IS NULL
 GROUP BY pizza_names.pizza_name;
