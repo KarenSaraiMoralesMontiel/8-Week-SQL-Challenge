@@ -443,30 +443,84 @@ ORDER BY order_count DESC;
 ### 1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 
 ````sql
-
+SELECT 
+		DATE_TRUNC(
+			'day', 
+			'2021-01-01'::date + (FLOOR((registration_date - '2021-01-01'::date) / 7) * 7) * INTERVAL '1 day'
+				  ) AS week_start,
+		COUNT(runner_id) AS runners_signed_up
+FROM pizza_runner.runners
+GROUP BY week_start
+ORDER BY week_start; 
 ````
 
 **Answer:**
+|    week_start    | runners_signed_up |
+| ---------------- | ----------------- |
+| 01/01/2021 00:00 |	2              |
+| 08/01/2021 00:00 |	1              |
+| 15/01/2021 00:00 |	1              |
+
 
 ***
 
 ### 2. What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
 
 ````sql
-
+WITH pickup_time_cte AS (
+	SELECT customer_orders.order_id,
+	   	   runner_orders.runner_id,
+	       EXTRACT(EPOCH FROM (runner_orders.pickup_time - customer_orders.order_time)) / 60 AS pickup_minutes
+	FROM temp_customer_orders AS customer_orders
+	INNER JOIN temp_runner_orders runner_orders
+	ON customer_orders.order_id = runner_orders.order_id
+)
+SELECT runner_id,
+		ROUND(AVG(pickup_minutes), 2) as average_run_minutes
+FROM pickup_time_cte
+GROUP BY runner_id
+ORDER BY runner_id;
 ````
 
 **Answer:**
+| runner_id | average_run_minutes |
+| --------- | ------------------- |
+| 1         | 15.68               |
+| 2         | 23.72               |
+| 3         | 10.47               |
 
 ***
 
 ### 3. Is there any relationship between the number of pizzas and how long the order takes to prepare?
 
 ````sql
-
+WITH preparing_time_cte AS (
+	SELECT customer_orders.order_id,
+	   COUNT(customer_orders.pizza_id) as num_pizzas,
+	   --customer_orders.order_time,
+	   --runner_orders.pickup_time,
+	   runner_orders.pickup_time - customer_orders.order_time as pickup_minutes
+	FROM temp_customer_orders customer_orders
+	INNER JOIN temp_runner_orders runner_orders
+	ON customer_orders.order_id = runner_orders.order_id
+	GROUP BY customer_orders.order_id, 
+	   customer_orders.order_time,
+	   runner_orders.pickup_time
+	ORDER BY customer_orders.order_id
+	)
+	
+	SELECT num_pizzas,
+		   AVG(pickup_minutes) avg_preparing_time
+FROM preparing_time_cte
+GROUP BY num_pizzas;
 ````
 
 **Answer:**
+| num_pizzas | avg_preparing_time |
+| ---------- | ------------------ |
+| 3          | 0:29:17            |
+| 2          | 00:18:22.5         |
+| 1          | 00:12:21.4         |
 
 ***
 
