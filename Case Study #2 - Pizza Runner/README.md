@@ -153,7 +153,7 @@ Then alter the table type.
 
 ````sql 
 ALTER TABLE temp_runner_orders
-ALTER COLUMN pickup_time TYPE DATE USING pickup_time::date,
+ALTER COLUMN pickup_time TYPE TIMESTAMP USING pickup_time::timestamp,
 ALTER COLUMN distance TYPE FLOAT USING distance::float,
 ALTER COLUMN duration TYPE INT USING duration::int;
 
@@ -320,7 +320,6 @@ HAVING COUNT(pizza_id) = (SELECT MAX(maximum_pizzas) FROM MaxPizzas)
 
 ***
 
-
 ### 7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?
 
 ````sql
@@ -355,33 +354,60 @@ ORDER BY customer_id;
 | 104         | 2                   | 1         |
 | 105         | 1                   | 0         |
 
-***
 
+- Customer 101 and 102 likes his/her pizzas per the original recipe.
+- Customer 103, 104 and 105 have their own preference for pizza topping and requested at least 1 change (extra or exclusion topping) on their pizza.
+
+***
 
 ### 8.How many pizzas were delivered that had both exclusions and extras?
 
 ````sql
-SELECT COUNT(pizza_id) exclusions_and_extra_orders_count
-FROM temp_customer_orders
-WHERE exclusions IS NOT NULL
-	AND extras IS NOT NULL;
+SELECT 
+	COUNT(customer_orders.pizza_id) exclusions_and_extra_orders_count
+FROM temp_customer_orders customer_orders
+INNER JOIN temp_runner_orders runner_orders
+ON customer_orders.order_id = runner_orders.order_id
+WHERE customer_orders.exclusions IS NOT NULL
+	AND customer_orders.extras IS NOT NULL 
+	AND runner_orders.cancellation IS NOT NULL;
 ````
 
 **Answer:**
 | exclusions_and_extra_orders_count |
 | --------------------------------- |
-| 2                                 |
+| 1                                 |
+
+- Only 1 pizza delivered that had both extra and exclusion topping.
 
 ***
-
 
 ### 9. What was the total volume of pizzas ordered for each hour of the day?
 
 ````sql
-
+SELECT 
+    EXTRACT(hour FROM order_time) AS order_hour,
+    COUNT(DISTINCT order_id) AS order_count
+FROM temp_customer_orders
+WHERE order_time IS NOT NULL
+GROUP BY order_hour
+ORDER BY order_hour;
 ````
 
 **Answer:**
+| order_hour | order_count |
+| ---------- | ----------- |
+| 11         | 1           |
+| 13         | 1           |
+| 18         | 2           |
+| 19         | 1           |
+| 21         | 3           |
+| 23         | 2           |
+
+
+- Highest volume of pizza ordered is at 13 (1:00 pm), 18 (6:00 pm) and 21 (9:00 pm).
+- Lowest volume of pizza ordered is at 11 (11:00 am), 19 (7:00 pm) and 23 (11:00 pm).
+
 
 ***
 
@@ -390,16 +416,31 @@ WHERE exclusions IS NOT NULL
 
 ````sql
 
+SELECT 
+  TRIM(TO_CHAR(order_time, 'Day')) AS order_day,
+  COUNT(order_id) AS order_count
+FROM temp_customer_orders
+GROUP BY TO_CHAR(order_time, 'Day')
+ORDER BY order_count DESC;
 ````
 
 **Answer:**
+| order_day | order_count |
+| --------- | ----------- |
+| Saturday  | 5           |
+| Wednesday | 5           |
+| Thursday  | 3           |
+| Friday    | 1           |
+
+
+- On Saturdays and Wednesday more orders are placed.
+- Friday is the day with the least orders.
 
 ***
 
-
 ## B. Runner and Customer Experience
 
-### 1. 
+### 1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 
 ````sql
 
@@ -408,5 +449,75 @@ WHERE exclusions IS NOT NULL
 **Answer:**
 
 ***
+
+### 2. What was the average time in minutes it took for each runner to arrive at the Pizza Runner HQ to pickup the order?
+
+````sql
+
+````
+
+**Answer:**
+
+***
+
+### 3. Is there any relationship between the number of pizzas and how long the order takes to prepare?
+
+````sql
+
+````
+
+**Answer:**
+
+***
+
+### 4. What was the average distance travelled for each customer?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 5. What was the difference between the longest and shortest delivery times for all orders?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 6. What was the average speed for each runner for each delivery and do you notice any trend for these values?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 7. What is the successful delivery percentage for each runner?
+
+````sql
+
+````
+
+**Answer:**
+
+
+****
+
+## C. Ingredient Optimisation
+
+
+
+
 
 
