@@ -1,4 +1,6 @@
 # 🍕 Case Study #2: Pizza Runner
+[![View Main Folder](https://img.shields.io/badge/View-Main_Folder-971901?)](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main)
+[![View My Portfolio](https://img.shields.io/badge/View-My_Profile-green?logo=GitHub)](https://github.com/KarenSaraiMoralesMontiel/Portfolio)
 
 <img src='https://8weeksqlchallenge.com/images/case-study-designs/2.png' alt="Pizza Runner Image" width="500" height="520">
 
@@ -8,11 +10,10 @@
 1. [Bussiness Task](#bussiness-task)
 2. [Entity Relationship Diagram](#entity-relationship-diagram)
 3. [Data Cleaning](#data-cleaning)
-4. [Solution](#analysis-questions)
+4. [Solution](#solutions)
 	- [A. Pizza Metrics](#a-pizza-metrics)
 	- [B. Runner and Customer Experience](#b-runner-and-customer-experience)
 	- [C. Ingredient Optimisation](#c-ingredient-optimisation)
-
 
 Please note that all the information regarding the case study has been sourced from the following link: [here](https://8weeksqlchallenge.com/case-study-2/).
 
@@ -31,6 +32,7 @@ Danny was sold on the idea, but he knew that pizza alone was not going to help h
 ***
 
 ## 🧼 Data Cleaning
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
 ### 🛠 Customer Orders
 
@@ -179,9 +181,10 @@ Now we are all set to use this temporary tables to answer the solutions from thi
 
 ***
 
-## Solution
+## Solutions
 
 ## A. Pizza Metrics
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
 ### 1. How many pizzas were ordered?
 
@@ -442,6 +445,7 @@ ORDER BY order_count DESC;
 ***
 
 ## B. Runner and Customer Experience
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
 ### 1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 
@@ -642,6 +646,7 @@ Sucessfull rates however are not a reliable metric to score the runners, it coul
 ****
 
 ## C. Ingredient Optimisation
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
 ### 1. What are the standard ingredients for each pizza?
 

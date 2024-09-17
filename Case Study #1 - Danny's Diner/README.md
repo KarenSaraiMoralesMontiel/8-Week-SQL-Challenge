@@ -1,4 +1,6 @@
 # 👨🏻‍🍳 Case Study #1: Danny's Diner
+[![View Main Folder](https://img.shields.io/badge/View-Main_Folder-971901?)](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main)
+[![View My Portfolio](https://img.shields.io/badge/View-My_Profile-green?logo=GitHub)](https://github.com/KarenSaraiMoralesMontiel/Portfolio)
 
 <img src='https://8weeksqlchallenge.com/images/case-study-designs/1.png' alt="Danny's Diner Image" width="500" height="520">
 
