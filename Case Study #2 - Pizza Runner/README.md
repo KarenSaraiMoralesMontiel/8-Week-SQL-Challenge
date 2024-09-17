@@ -9,6 +9,9 @@
 2. [Entity Relationship Diagram](#entity-relationship-diagram)
 3. [Data Cleaning](#data-cleaning)
 4. [Solution](#analysis-questions)
+	- [A. Pizza Metrics](#a-pizza-metrics)
+	- [B. Runner and Customer Experience](#b-runner-and-customer-experience)
+	- [C. Ingredient Optimisation](#c-ingredient-optimisation)
 
 
 Please note that all the information regarding the case study has been sourced from the following link: [here](https://8weeksqlchallenge.com/case-study-2/).
