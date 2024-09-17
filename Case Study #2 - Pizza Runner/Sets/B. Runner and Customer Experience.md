@@ -129,6 +129,7 @@ FROM temp_runner_orders;
 
 **Answer:**
 | delivery_time_difference_min |
+| ---------------------------- |
 | 30                           |
 
 - The range of duration is 30 minutes of all orders.
