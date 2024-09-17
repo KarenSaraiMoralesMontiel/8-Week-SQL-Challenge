@@ -768,8 +768,11 @@ WITH order_pizza_info_cte AS (
            END AS standard_toppings_and_extras, 
            customer_orders.exclusions
     FROM temp_customer_orders customer_orders
+	LEFT JOIN temp_runner_orders runner_orders
+	ON customer_orders.order_id = runner_orders.order_id
     LEFT JOIN pizza_runner.pizza_recipes pizza_recipes
     ON customer_orders.pizza_id = pizza_recipes.pizza_id
+	WHERE runner_orders.cancellation IS NULL
 ),
 unnested_toppings AS (
     -- Unnest standard toppings and extras
@@ -808,18 +811,18 @@ ORDER BY count DESC;
 **Answer:**
 |topping_name|	count|
 | ---------- | ----- |
-|Bacon|	14|
-|Mushrooms|	12|
-|Chicken|	11|
-|Cheese|	11|
-|Pepperoni|	10|
-|Salami|	10|
-|Beef|	10|
-|BBQ Sauce|	8|
-|Tomato Sauce|	4|
-|Onions|	4|
-|Tomatoes|	4|
-|Peppers|	4|
+|Bacon|	12|
+|Mushrooms|	10|
+|Chicken|	10|
+|Cheese|	 9|
+|Pepperoni|	 9|
+|Salami|	9|
+|Beef|	9|
+|BBQ Sauce|	7|
+|Tomato Sauce|	3|
+|Onions|	3|
+|Tomatoes|	3|
+|Peppers|	3|
 
 
 ***
