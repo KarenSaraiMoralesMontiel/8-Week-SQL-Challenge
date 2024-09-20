@@ -748,10 +748,65 @@ LIMIT 1;
  - `Meat Lovers - Exclude Cheese, Bacon - Extra Mushroom, Peppers`
 
 ````sql
-
+-- IT only shows orders with exclusions or extras, 
+--it doesn't show normal orders
+WITH names_list_cte AS (
+    SELECT 
+        orders_cte.order_id,
+        pizza_names.pizza_name,
+        orders_cte.order_time,
+        -- Use unnesting only if there are exclusions or extras
+        TRIM(unnest(string_to_array(orders_cte.extras, ',')))::int AS extra_topping_id,
+        TRIM(unnest(string_to_array(orders_cte.exclusions, ',')))::int AS exclusion_topping_id
+    FROM 
+        temp_customer_orders orders_cte
+	LEFT JOIN 
+        pizza_runner.pizza_names pizza_names
+        ON pizza_names.pizza_id = orders_cte.pizza_id
+),
+aggregate_lists_cte AS (
+    SELECT 
+        names_list_cte.order_id,
+        names_list_cte.pizza_name, 
+        names_list_cte.order_time,
+        STRING_AGG(pizza_toppings.topping_name::text, ', ') AS extra_toppings_names,
+        STRING_AGG(pizza_toppings2.topping_name::text, ', ') AS exclusion_toppings_names
+    FROM 
+        names_list_cte
+    LEFT JOIN 
+        pizza_runner.pizza_toppings pizza_toppings
+        ON names_list_cte.extra_topping_id = pizza_toppings.topping_id
+    LEFT JOIN 
+        pizza_runner.pizza_toppings pizza_toppings2
+        ON names_list_cte.exclusion_topping_id = pizza_toppings2.topping_id
+    GROUP BY 
+        names_list_cte.order_id,
+        names_list_cte.pizza_name, 
+        names_list_cte.order_time
+)
+SELECT order_id,
+	   order_time,
+	   pizza_name ||
+	CASE 
+		WHEN extra_toppings_names IS NOT NULL THEN ' - Include ' || extra_toppings_names
+		ELSE ''
+	END ||
+	CASE 
+		WHEN exclusion_toppings_names IS NOT NULL THEN ' - Exclude ' || exclusion_toppings_names
+		ELSE ''
+	END AS order_item
+FROM aggregate_lists_cte;
 ````
 
 **Answer:**
+|order_id	|order_time|	order_item|
+| --------- | -------- | ------------ |
+|7	|08/01/2020 21:20	|Vegetarian - Include Bacon
+|4	|04/01/2020 13:23	|Vegetarian - Exclude Cheese
+|9	|10/01/2020 11:22	|Meatlovers - Include Bacon, Chicken - Exclude Cheese
+|10	|11/01/2020 18:34	|Meatlovers - Include Bacon, Cheese - Exclude BBQ Sauce, Mushrooms
+|4	|04/01/2020 13:23	|Meatlovers - Exclude Cheese, Cheese
+|5	|08/01/2020 21:00	|Meatlovers - Include Bacon
 
 
 ***
