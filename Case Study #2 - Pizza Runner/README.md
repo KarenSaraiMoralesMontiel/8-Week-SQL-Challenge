@@ -897,3 +897,109 @@ ORDER BY count DESC;
 </details>
 
 ***
+
+## D. Pricing and Ratings
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
+
+<details>
+
+### 1. If a Meat Lovers pizza costs $12 and Vegetarian costs $10 and there were no charges for changes - how much money has Pizza Runner made so far if there are no delivery fees?
+
+````sql
+SELECT 
+CONCAT('$',SUM(
+	CASE 
+		WHEN pizza_id = 1 THEN 12
+		WHEN pizza_id = 2 THEN 10
+		ELSE 0
+	END)) total_revenue
+FROM temp_customer_orders customer_orders
+LEFT JOIN temp_runner_orders runner_orders
+	ON customer_orders.order_id = runner_orders.order_id 
+WHERE cancellation IS NULL;
+````
+
+**Answer:**
+| total_revenue |
+| ------------- |
+| $138          |
+
+- There has been a total revenue of $138.
+
+***
+
+### 2. What if there was an additional $1 charge for any pizza extras? Add cheese is $1 extra
+
+````sql
+SELECT CONCAT('$', total_revenue) AS total_revenue
+FROM (
+    SELECT SUM(CASE
+                  WHEN pizza_id = 1 THEN 12
+                  ELSE 10
+              END) AS pizza_revenue,
+           SUM(topping_count) AS topping_revenue,
+           SUM(CASE
+                  WHEN pizza_id = 1 THEN 12
+                  ELSE 10
+              END) + SUM(topping_count) AS total_revenue
+    FROM (
+        SELECT *,
+               LENGTH(extras) - LENGTH(REPLACE(extras, ',', '')) + 1 AS topping_count
+        FROM temp_customer_orders
+        INNER JOIN pizza_runner.pizza_names  pizza_names USING (pizza_id)
+        INNER JOIN temp_runner_orders USING (order_id)
+        WHERE cancellation IS NULL
+    ) table_1
+) table_2;
+````
+
+**Answer:**
+| total_revenue |
+| ------------- |
+| $142          |
+
+
+***
+
+### 3. The Pizza Runner team now wants to add an additional ratings system that allows customers to rate their runner, how would you design an additional table for this new dataset - generate a schema for this new table and insert your own data for ratings for each successful customer order between 1 to 5.
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 4. The Pizza Runner team now wants to add an additional ratings system that allows customers to rate their runner, how would you design an additional table for this new dataset - generate a schema for this new table and insert your own data for ratings for each successful customer order between 1 to 5.
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 5. If a Meat Lovers pizza was $12 and Vegetarian $10 fixed prices with no cost for extras and each runner is paid $0.30 per kilometre traveled - how much money does Pizza Runner have left over after these deliveries?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+</details>
+
+## E. Bonus Questions
+
+<details>
+
+If Danny wants to expand his range of pizzas - how would this impact the existing data design? Write an INSERT statement to demonstrate what would happen if a new Supreme pizza with all the toppings was added to the Pizza Runner menu?
+
+</details>
