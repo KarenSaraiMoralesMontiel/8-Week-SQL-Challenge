@@ -1,0 +1,207 @@
+# 🥑 Case Study #3: Foodie-Fi
+[![View Main Folder](https://img.shields.io/badge/View-Main_Folder-971901?)](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main)
+[![View My Portfolio](https://img.shields.io/badge/View-My_Profile-green?logo=GitHub)](https://github.com/KarenSaraiMoralesMontiel/Portfolio)
+
+<img src='https://8weeksqlchallenge.com/images/case-study-designs/3.png' alt="Foodie-Fi Image" width="500" height="520">
+
+***
+
+## 📖 Table of Contents
+1. [Bussiness Task](#bussiness-task)
+2. [Entity Relationship Diagram](#entity-relationship-diagram)
+3. [Solution](#solutions)
+    - [A. Customer Journey](#a-customer-journey)
+    - [B. Data Analysis Questions](#b-data-analysis-questions)
+    - [C. Challenge Patment Question](#c-challenge-payment-question)
+    - [D. Outside The Box Questions ](#d-outside-the-box-questions)
+
+Please note that all the information regarding the case study has been sourced from the following link: [here](https://8weeksqlchallenge.com/case-study-3/).
+
+## Bussiness Task
+Subscription based businesses are super popular and Danny realised that there was a large gap in the market - he wanted to create a new streaming service that only had food related content - something like Netflix but with only cooking shows!
+
+Danny finds a few smart friends to launch his new startup Foodie-Fi in 2020 and started selling monthly and annual subscriptions, giving their customers unlimited on-demand access to exclusive food videos from around the world!
+
+## Entity Relationship Diagram
+![Foodie-Fi ERD](image.png)
+
+## Solution
+
+## A. Customer Journey
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
+
+<details>
+
+Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customer’s onboarding journey.
+
+</details>
+
+***
+
+## B. Data Analysis Questions
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
+
+<details>
+
+### 1. How many customers has Foodie-Fi ever had?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 2. What is the monthly distribution of trial plan start_date values for our dataset - use the start of the month as the group by value?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 3. What plan start_date values occur after the year 2020 for our dataset? Show the breakdown by count of events for each plan_name
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 4. What is the customer count and percentage of customers who have churned rounded to 1 decimal place?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 5. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 6. What is the number and percentage of customer plans after their initial free trial?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 7. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 8. How many customers have upgraded to an annual plan in 2020?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 9. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 10. Can you further breakdown this average value into 30 day periods (i.e. 0-30 days, 31-60 days etc)
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+### 11. How many customers downgraded from a pro monthly to a basic monthly plan in 2020?
+
+````sql
+
+````
+
+**Answer:**
+
+
+</details>
+
+***
+
+## C. Challenge Payment Question
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
+
+<details>
+
+The Foodie-Fi team wants you to create a new payments table for the year 2020 that includes amounts paid by each customer in the subscriptions table with the following requirements:
+
+    monthly payments always occur on the same day of month as the original start_date of any monthly paid plan
+    upgrades from basic to monthly or pro plans are reduced by the current paid amount in that month and start immediately
+    upgrades from pro monthly to pro annual are paid at the end of the current billing period and also starts at the end of the month period
+    once a customer churns they will no longer make payments
+
+
+````sql
+
+````
+
+**Answer:**
+
+
+***
+
+
+</details>
+
+## D. Outside The Box Questions
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
+
+The following are open ended questions which might be asked during a technical interview for this case study - there are no right or wrong answers, but answers that make sense from both a technical and a business perspective make an amazing impression!
+
+<details>
+    How would you calculate the rate of growth for Foodie-Fi?
+    What key metrics would you recommend Foodie-Fi management to track over time to assess performance of their overall business?
+    What are some key customer journeys or experiences that you would analyse further to improve customer retention?
+    If the Foodie-Fi team were to create an exit survey shown to customers who wish to cancel their subscription, what questions would you include in the survey?
+    What business levers could the Foodie-Fi team use to reduce the customer churn rate? How would you validate the effectiveness of your ideas?
+
+</details>
+

@@ -8,8 +8,8 @@ Thanks for [Data with Danny](https://www.linkedin.com/company/datawithdanny/) fo
 
 ## 📖 Table of Contents
 - [👨🏻‍🍳 Case Study #1: Danny's Diner](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main/Case%20Study%20%231%20-%20Danny's%20Diner#-case-study-1-dannys-diner)
-- [🍕 Case Study #2: Pizza Runner](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main/Case%20Study%20%232%20-%20Pizza%20Runner#-case-study-2-pizza-runner) (In progress!)
-- 🥑 Case Study #3: Foodie-Fi
+- [🍕 Case Study #2: Pizza Runner](https://github.com/KarenSaraiMoralesMontiel/8-Week-SQL-Challenge/tree/main/Case%20Study%20%232%20-%20Pizza%20Runner#-case-study-2-pizza-runner)
+- [🥑 Case Study #3: Foodie-Fi]()
 - 💰 Case Study #4: Data Bank
 - 🛒 Case Study #5: Data Mart
 - 🖱 Case Study #6: Clique Bait
