@@ -186,7 +186,8 @@ Now we are all set to use this temporary tables to answer the solutions from thi
 ## A. Pizza Metrics
 [![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
-<solution>
+<button onclick="toggleSolution()">Show Solution</button>
+<div id="solution" style="display:none;">
 
 ### 1. How many pizzas were ordered?
 
@@ -444,14 +445,15 @@ ORDER BY order_count DESC;
 - On Saturdays and Wednesday more orders are placed.
 - Friday is the day with the least orders.
 
-</solution>
+</div>
 
 ***
 
 ## B. Runner and Customer Experience
 [![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
-<solution>
+<button onclick="toggleSolution()">Show Solution</button>
+<div id="solution" style="display:none;">
 
 ### 1. How many runners signed up for each 1 week period? (i.e. week starts 2021-01-01)
 
@@ -649,14 +651,15 @@ FROM orders_cte_by_runner_cte;
 
 Sucessfull rates however are not a reliable metric to score the runners, it could be multiple reasons why an order could not be delivered from bad seasonal weather to a cancellation from either the restaurant or the customer! 
 
-</solution>
+</div>
 
 ****
 
 ## C. Ingredient Optimisation
 [![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
-<solution>
+<button onclick="toggleSolution()">Show Solution</button>
+<div id="solution" style="display:none;">
 
 ### 1. What are the standard ingredients for each pizza?
 
@@ -839,11 +842,17 @@ ORDER BY count DESC;
 |Tomatoes|	3|
 |Peppers|	3|
 
-</solution>
+</div>
 
 ***
 
-
-
-
-
+<script>
+function toggleSolution() {
+    var solutionDiv = document.getElementById("solution");
+    if (solutionDiv.style.display === "none") {
+        solutionDiv.style.display = "block";
+    } else {
+        solutionDiv.style.display = "none";
+    }
+}
+</script>
