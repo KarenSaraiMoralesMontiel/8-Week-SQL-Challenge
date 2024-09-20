@@ -184,7 +184,7 @@ Now we are all set to use this temporary tables to answer the solutions from thi
 ## Solutions
 
 ## A. Pizza Metrics
-[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Table-of-Contents-971901?)](#-table-of-contents)
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
 <solution>
 
