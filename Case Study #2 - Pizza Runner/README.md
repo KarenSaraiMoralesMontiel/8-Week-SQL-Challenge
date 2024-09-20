@@ -9,7 +9,7 @@
 ## 📖 Table of Contents
 1. [Bussiness Task](#bussiness-task)
 2. [Entity Relationship Diagram](#entity-relationship-diagram)
-3. [Data Cleaning](#data-cleaning)
+3. [Data Cleaning](#-data-cleaning)
 4. [Solution](#solutions)
 	- [A. Pizza Metrics](#a-pizza-metrics)
 	- [B. Runner and Customer Experience](#b-runner-and-customer-experience)
