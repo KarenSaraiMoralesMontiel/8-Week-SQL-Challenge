@@ -1117,6 +1117,7 @@ GROUP BY 1;
 </details>
 
 ## E. Bonus Questions
+[![Go back to Tabe of Contents](https://img.shields.io/badge/View-Main_Folder-971901?)](#-table-of-contents)
 
 <details>
 
