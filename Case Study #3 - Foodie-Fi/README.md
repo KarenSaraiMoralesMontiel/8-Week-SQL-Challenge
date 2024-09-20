@@ -12,7 +12,7 @@
 3. [Solution](#solutions)
     - [A. Customer Journey](#a-customer-journey)
     - [B. Data Analysis Questions](#b-data-analysis-questions)
-    - [C. Challenge Patment Question](#c-challenge-payment-question)
+    - [C. Challenge Payment Question](#c-challenge-payment-question)
     - [D. Outside The Box Questions ](#d-outside-the-box-questions)
 
 Please note that all the information regarding the case study has been sourced from the following link: [here](https://8weeksqlchallenge.com/case-study-3/).
