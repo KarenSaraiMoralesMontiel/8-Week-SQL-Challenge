@@ -30,45 +30,135 @@ Customers are allocated cloud data storage limits which are directly linked to h
 ### 1. How many unique nodes are there on the Data Bank system?
 
 ````sql
-
+SELECT COUNT(DISTINCT node_id) unique_nodes
+FROM data_bank.customer_nodes;
 ````
 
 **Answer:**
+| unique_nodes |
+| ------------ |
+| 5            |
+
+- There are 5 unique nodes of all branches.
 
 ### 2. What is the number of nodes per region?
 
 ````sql
-
+SELECT regions.region_name, 
+COUNT(DISTINCT customer_nodes.node_id) unique_nodes
+FROM data_bank.regions regions
+JOIN data_bank.customer_nodes customer_nodes
+	ON regions.region_id = customer_nodes.region_id
+GROUP BY regions.region_name;
 ````
 
 **Answer:**
+| region_name  | unique_nodes |
+| ------------ | ------------ |
+| Africa       | 5            |
+| America      | 5            |
+| Asia         | 5            |
+| Australia    | 5            |
+| Europe       | 5            |
 
+- All regions have the same number of unique nodes. Very interesting!
 
 ### 3. How many customers are allocated to each region?
 
 ````sql
-
+SELECT regions.region_name, 
+COUNT(customer_nodes.customer_id) customers_count
+FROM data_bank.regions regions
+JOIN data_bank.customer_nodes customer_nodes
+	ON regions.region_id = customer_nodes.region_id
+GROUP BY regions.region_name
+ORDER BY customers_count DESC;
 ````
 
 **Answer:**
-
+| region_name  | unique_nodes |
+| ------------ | ------------ |
+| Australia    | 770          |
+| America      | 735          |
+| Africa       | 714          |
+| Asia         | 665          |
+| Europe       | 616          |
 
 ### 4. How many days on average are customers reallocated to a different node?
 
 ````sql
+WITH customerDates AS (
+  SELECT 
+    customer_id,
+    region_id,
+    node_id,
+    MIN(start_date) AS first_date
+  FROM data_bank.customer_nodes
+  GROUP BY customer_id, region_id, node_id
+),
+reallocation AS (
+  SELECT
+    customer_id,
+    node_id,
+    region_id,
+    first_date,
+    (LEAD(first_date) OVER(PARTITION BY customer_id 
+                           ORDER BY first_date) - first_date) AS moving_days
+  FROM customerDates
+)
+SELECT 
+  ROUND(AVG(moving_days)) AS avg_moving_days
+FROM reallocation;
 
 ````
 
 **Answer:**
-
+| avg_moving_days |
+| --------------- |
+| 24              |
 
 ### 5. What is the median, 80th and 95th percentile for this same reallocation days metric for each region?
 
 ````sql
-
+WITH customerDates AS (
+  SELECT 
+    customer_id,
+    region_id,
+    node_id,
+    MIN(start_date) AS first_date
+  FROM data_bank.customer_nodes
+  GROUP BY customer_id, region_id, node_id
+),
+reallocation AS (
+  SELECT
+    customer_id,
+    node_id,
+    region_id,
+    first_date,
+    (LEAD(first_date) OVER(PARTITION BY customer_id 
+                           ORDER BY first_date) - first_date) AS moving_days
+  FROM customerDates
+)
+SELECT 
+  r.region_id,
+  rg.region_name,
+  ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY r.moving_days))::NUMERIC, 2) AS median,
+  ROUND((PERCENTILE_CONT(0.8) WITHIN GROUP (ORDER BY r.moving_days))::NUMERIC, 2) AS percentile_80,
+  ROUND((PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY r.moving_days))::NUMERIC, 2) AS percentile_95
+FROM reallocation r
+JOIN data_bank.regions rg ON r.region_id = rg.region_id
+WHERE r.moving_days IS NOT NULL
+GROUP BY r.region_id, rg.region_name;
 ````
 
 **Answer:**
+| region_id | region_name |median  |percentile_80 |percentile_95|
+| --------- | ----------- | ------ | ------------ | ----------- |
+|1      	| Australia   |22.00   |	31.00     |	54.00       |
+|2      	| America     |21.00   |	33.20     |	57.00       |
+|3      	| Africa 	  |21.00   |	33.20     |	58.80       |
+|4      	| Asia 	      |22.00   |    32.40     |	49.85       |
+|5      	| Europe 	  |22.00   |    31.00     |	54.30       |
 
 ***
 
@@ -77,11 +167,19 @@ Customers are allocated cloud data storage limits which are directly linked to h
 ### 1. What is the unique count and total amount for each transaction type?
 
 ````sql
-
+SELECT txn_type,
+	   COUNT(txn_type) txn_type_count,
+       SUM(txn_amount) total_amount
+FROM data_bank.customer_transactions
+GROUP BY txn_type;
 ````
 
 **Answer:**
-
+|txn_type 	|txn_type_count | total_amount |
+| --------- | ------------- | ------------ |
+|purchase 	|1617 	        | 806537       |
+|deposit 	|2671 	        | 1359168      |
+|withdrawal |1580 	        | 793003       |
 
 ### 2. What is the average total historical deposit counts and amounts for all customers?
 
@@ -136,6 +234,8 @@ For this multi-part challenge question - you have been requested to generate the
 - minimum, average and maximum values of the running balance for each customer
 
 Using all of the data available - how much data would have been required for each option on a monthly basis?
+
+***
 
 ### D. Extra Challenge
 
