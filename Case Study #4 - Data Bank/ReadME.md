@@ -283,9 +283,12 @@ transactions AS (
 )
 SELECT 
     customer_id,
-    month_year,
+    TO_CHAR(TO_DATE(month_year, 'MM-YYYY'), 'Mon-YYYY'),
     transactions,
-    COALESCE(SUM(transactions) OVER (PARTITION BY customer_id ORDER BY month_year ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 0) AS running_balance
+    COALESCE(SUM(transactions) OVER (PARTITION BY customer_id 
+                                     ORDER BY month_year 
+                                     ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 
+            0) AS running_balance
 FROM 
     transactions
 ORDER BY 
@@ -296,22 +299,22 @@ ORDER BY
 **Answer:**
 |customer_id | month_year | transactions | running_balance |
 | ---------- | ---------- | ------------ | --------------- |
-|1 	|01-2020 	|312 	|312|
-|1 	|02-2020 	|0 	|312|
-|1 	|03-2020 	|-952 	|-640|
-|1 	|04-2020 	|0 	|-640|
-|2 	|01-2020 	|549 	|549|
-|2 	|02-2020 	|0 	|549|
-|2 	|03-2020 	|61 	|610|
-|2 	|04-2020 	|0 	|610|
-|3 	|01-2020 	|144 	|144|
-|3 	|02-2020 	|-965 	|-821|
-|3 	|03-2020 	|-401 	|-1222|
-|3 	|04-2020 	|493 	|-729|
-|4 	|01-2020 	|848 	|848|
-|4 	|02-2020 	|0 	|848|
-|4 	|03-2020 	|-193 	|655|
-|4 	|04-2020 	|0 	|655|
+|1 	|Jan-2020 	|312 	|312|
+|1 	|Feb-2020 	|0 	|312|
+|1 	|Mar-2020 	|-952 	|-640|
+|1 	|Apr-2020 	|0 	|-640|
+|2 	|Jan-2020 	|549 	|549|
+|2 	|Feb-2020 	|0 	|549|
+|2 	|Mar-2020 	|61 	|610|
+|2 	|Apr-2020 	|0 	|610|
+|3 	|Jan-2020 	|144 	|144|
+|3 	|Feb-2020 	|-965 	|-821|
+|3 	|Mar-2020 	|-401 	|-1222|
+|3 	|Apr-2020 	|493 	|-729|
+|4 	|Jan-2020 	|848 	|848|
+|4 	|Feb-2020 	|0 	|848|
+|4 	|Mar-2020 	|-193 	|655|
+|4 	|Apr-2020 	|0 	|655|
 
 ### 5. What is the percentage of customers who increase their closing balance by more than 5%?
 
