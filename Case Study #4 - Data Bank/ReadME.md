@@ -233,12 +233,85 @@ ORDER BY TO_DATE(month_year, 'MM-YYYY');
 | Apr-2020   | 	50            |
 
 ### 4. What is the closing balance for each customer at the end of the month?
-````sql
 
+````sql
+WITH all_months AS (
+  -- Generate a series of months between the earliest and latest transaction date
+  SELECT customer_id, 
+         TO_CHAR(generate_series(MIN(txn_date), (MAX(txn_date) + INTERVAL '1 month'), '1 month'), 'MM-YYYY') AS month_year
+  FROM data_bank.customer_transactions
+  GROUP BY customer_id
+),
+month_year_transactions AS (
+  -- Combine the actual transactions and the months with no transactions
+  SELECT 
+  customer_id, 
+  month_year,
+  SUM(deposit_amount) AS deposit_amount,
+  SUM(purchase_amount) AS purchase_amount,
+  SUM(withdrawal_amount) AS withdrawal_amount
+FROM (
+  SELECT
+    customer_id,
+    TO_CHAR(txn_date, 'MM-YYYY') AS month_year,
+    SUM(CASE WHEN txn_type = 'deposit' THEN txn_amount ELSE 0 END) AS deposit_amount,
+    SUM(CASE WHEN txn_type = 'purchase' THEN txn_amount ELSE 0 END) AS purchase_amount,
+    SUM(CASE WHEN txn_type = 'withdrawal' THEN txn_amount ELSE 0 END) AS withdrawal_amount
+  FROM data_bank.customer_transactions
+  GROUP BY customer_id, TO_CHAR(txn_date, 'MM-YYYY')
+
+  UNION ALL
+
+  -- Add zero-amount rows for months with no transactions
+  SELECT
+    customer_id,
+    month_year,
+    0 AS deposit_amount,
+    0 AS purchase_amount,
+    0 AS withdrawal_amount
+  FROM all_months ) combine
+  GROUP BY customer_id, month_year
+  ORDER BY customer_id, month_year
+),
+transactions AS (
+  SELECT 
+      customer_id,
+      month_year,
+      deposit_amount - (purchase_amount + withdrawal_amount) AS transactions
+  FROM 
+      month_year_transactions
+)
+SELECT 
+    customer_id,
+    month_year,
+    transactions,
+    COALESCE(SUM(transactions) OVER (PARTITION BY customer_id ORDER BY month_year ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 0) AS running_balance
+FROM 
+    transactions
+ORDER BY 
+    customer_id,
+    month_year;
 ````
 
 **Answer:**
-
+|customer_id | month_year | transactions | running_balance |
+| ---------- | ---------- | ------------ | --------------- |
+|1 	|01-2020 	|312 	|312|
+|1 	|02-2020 	|0 	|312|
+|1 	|03-2020 	|-952 	|-640|
+|1 	|04-2020 	|0 	|-640|
+|2 	|01-2020 	|549 	|549|
+|2 	|02-2020 	|0 	|549|
+|2 	|03-2020 	|61 	|610|
+|2 	|04-2020 	|0 	|610|
+|3 	|01-2020 	|144 	|144|
+|3 	|02-2020 	|-965 	|-821|
+|3 	|03-2020 	|-401 	|-1222|
+|3 	|04-2020 	|493 	|-729|
+|4 	|01-2020 	|848 	|848|
+|4 	|02-2020 	|0 	|848|
+|4 	|03-2020 	|-193 	|655|
+|4 	|04-2020 	|0 	|655|
 
 ### 5. What is the percentage of customers who increase their closing balance by more than 5%?
 
