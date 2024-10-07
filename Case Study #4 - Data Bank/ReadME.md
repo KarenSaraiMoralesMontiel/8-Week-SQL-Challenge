@@ -184,20 +184,53 @@ GROUP BY txn_type;
 ### 2. What is the average total historical deposit counts and amounts for all customers?
 
 ````sql
-
+WITH historical_data as (
+  SELECT customer_id,
+		COUNT(txn_date) num_deposits,
+        SUM(txn_amount) total_sum
+  FROM data_bank.customer_transactions
+  WHERE txn_type = 'deposit'
+  GROUP BY customer_id)
+SELECT ROUND(AVG(num_deposits)) avg_no_deposits,
+ROUND(AVG(total_sum)::NUMERIC,3) avg_deposit
+FROM historical_data;
 ````
 
 **Answer:**
-
+|avg_no_deposits | avg_deposit |
+| -------------- | ----------- |
+|5               | 2718.336    |
 
 ### 3. For each month - how many Data Bank customers make more than 1 deposit and either 1 purchase or 1 withdrawal in a single month?
 
 ````sql
-
+WITH month_year_transactions as (
+  SELECT
+	customer_id,
+	TO_CHAR(txn_date, 'mm-yyyy') month_year,
+  	SUM(CASE WHEN txn_type = 'deposit' THEN 1 ELSE 0 END) deposit_count,
+  	SUM(CASE WHEN txn_type = 'purchase' THEN 1 ELSE 0 END) purchase_count,
+    SUM(CASE WHEN txn_type = 'withdrawal' THEN 1 ELSE 0 END) withdrawal_count
+  FROM data_bank.customer_transactions
+  GROUP BY customer_id, TO_CHAR(txn_date, 'mm-yyyy')
+)
+SELECT
+  TO_CHAR(TO_DATE(month_year, 'MM-YYYY'), 'Mon-YYYY') AS month_year,
+  COUNT(DISTINCT customer_id) AS customer_count
+FROM month_year_transactions
+WHERE deposit_count > 1 
+  AND (purchase_count = 1 OR withdrawal_count = 1)
+GROUP BY TO_DATE(month_year, 'MM-YYYY')
+ORDER BY TO_DATE(month_year, 'MM-YYYY'); 
 ````
 
 **Answer:**
-
+| month_year | customer_count |
+| ---------- | -------------- |
+| Jan-2020   | 	115           |
+| Feb-2020   | 	108           |
+| Mar-2020   | 	113           |
+| Apr-2020   | 	50            |
 
 ### 4. What is the closing balance for each customer at the end of the month?
 ````sql
