@@ -319,10 +319,6 @@ ORDER BY
 ### 5. What is the percentage of customers who increase their closing balance by more than 5%?
 
 ````sql
-
-````
-
-**Answer:**
 WITH all_months AS (
   -- Generate a series of months between the earliest and latest transaction date
   SELECT 
@@ -412,6 +408,7 @@ SELECT
     / 
     (SELECT COUNT(*) FROM first_last_balance_cte)::numeric * 100) AS percentage_with_closing_statements_bigger_than_05_from_starting_balance
 ;
+````
 
 **Answer:**
 |percentage_with_closing_statements_bigger_than_05_from_starting_balance | 
