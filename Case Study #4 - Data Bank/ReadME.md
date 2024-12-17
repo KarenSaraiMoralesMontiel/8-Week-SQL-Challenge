@@ -323,9 +323,100 @@ ORDER BY
 ````
 
 **Answer:**
+WITH all_months AS (
+  -- Generate a series of months between the earliest and latest transaction date
+  SELECT 
+      customer_id, 
+      TO_CHAR(generate_series(MIN(txn_date), (MAX(txn_date) + INTERVAL '1 month'), '1 month'), 'MM-YYYY') AS month_year
+  FROM 
+      data_bank.customer_transactions
+  GROUP BY 
+      customer_id
+),
+month_year_transactions AS (
+  -- Combine the actual transactions and the months with no transactions
+  SELECT 
+      customer_id, 
+      month_year,
+      SUM(deposit_amount) AS deposit_amount,
+      SUM(purchase_amount) AS purchase_amount,
+      SUM(withdrawal_amount) AS withdrawal_amount
+  FROM (
+    SELECT
+        customer_id,
+        TO_CHAR(txn_date, 'MM-YYYY') AS month_year,
+        SUM(CASE WHEN txn_type = 'deposit' THEN txn_amount ELSE 0 END) AS deposit_amount,
+        SUM(CASE WHEN txn_type = 'purchase' THEN txn_amount ELSE 0 END) AS purchase_amount,
+        SUM(CASE WHEN txn_type = 'withdrawal' THEN txn_amount ELSE 0 END) AS withdrawal_amount
+    FROM 
+        data_bank.customer_transactions
+    GROUP BY 
+        customer_id, TO_CHAR(txn_date, 'MM-YYYY')
 
+    UNION ALL
 
+    -- Add zero-amount rows for months with no transactions
+    SELECT
+        customer_id,
+        month_year,
+        0 AS deposit_amount,
+        0 AS purchase_amount,
+        0 AS withdrawal_amount
+    FROM 
+        all_months 
+  ) combine
+  GROUP BY 
+      customer_id, month_year
+  ORDER BY 
+      customer_id, month_year
+),
+transactions AS (
+  SELECT 
+      customer_id,
+      month_year,
+      deposit_amount - (purchase_amount + withdrawal_amount) AS transactions
+  FROM 
+      month_year_transactions
+),
+running_balance_cte AS (
+  SELECT 
+      customer_id,
+      TO_CHAR(TO_DATE(month_year, 'MM-YYYY'), 'Mon-YYYY') AS month_year,
+      transactions, 
+      COALESCE(SUM(transactions) OVER (
+          PARTITION BY customer_id 
+          ORDER BY TO_DATE(month_year, 'MM-YYYY') 
+          ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 0) AS running_balance
+  FROM 
+      transactions
+  ORDER BY 
+      customer_id, month_year
+),
+first_last_balance_cte AS (
+SELECT 
+    DISTINCT customer_id,
+    FIRST_VALUE(running_balance) OVER (
+        PARTITION BY customer_id 
+        ORDER BY TO_DATE(month_year, 'Mon-YYYY') ASC
+    ) AS first_balance,
+    FIRST_VALUE(running_balance) OVER (
+        PARTITION BY customer_id 
+        ORDER BY TO_DATE(month_year, 'Mon-YYYY') DESC
+    ) AS last_balance
+FROM 
+    running_balance_cte)
+SELECT 
+    ROUND((SELECT COUNT(*) 
+     FROM first_last_balance_cte 
+     WHERE last_balance > first_balance * 1.05)::numeric 
+    / 
+    (SELECT COUNT(*) FROM first_last_balance_cte)::numeric * 100) AS percentage_with_closing_statements_bigger_than_05_from_starting_balance
+;
 
+**Answer:**
+|percentage_with_closing_statements_bigger_than_05_from_starting_balance | 
+| ---------- | 
+|34 	|
 ***
 
 ## C. Data Allocation Challenge
